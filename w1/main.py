@@ -8,12 +8,17 @@ import argparse
 from global_utils import get_file_name, make_dir, plot_sales_data
 from datetime import datetime
 import json
+from collections import defaultdict
 
 
 CURRENT_FOLDER_NAME = os.path.dirname(os.path.abspath(__file__))
 
 
 def revenue_per_region(dp: DataProcessor) -> Dict:
+
+
+    # return total revenue and revenue per region
+  
     """
     Input : object of instance type Class DataProcessor
     Output : Dict
@@ -44,6 +49,23 @@ def revenue_per_region(dp: DataProcessor) -> Dict:
     }
     """
     ######################################## YOUR CODE HERE ##################################################
+   # get generator from data_reader
+    data_reader_gen = (row for row in dp.data_reader)
+
+    # skip first row as it is the column name
+    _= next(data_reader_gen)
+
+    # Blank revenue_per_region
+    revenueregion = defaultdict(float)
+    
+    #creating loop to to get revnue per region
+    for row in tqdm(data_reader_gen):
+        country = row['Country']
+        sales_price = float(row['TotalPrice'])
+        revenueregion[country] += sales_price
+
+    return revenueregion
+
 
     ######################################## YOUR CODE HERE ##################################################
 
@@ -61,6 +83,7 @@ def get_sales_information(file_path: str) -> Dict:
         'revenue_per_region': revenue_per_region(dp),
         'file_name': get_file_name(file_path)
     }
+
 
 
 def main():

@@ -112,7 +112,12 @@ class DataReader:
         }
         """
     ######################################## YOUR CODE HERE ##################################################
-
+        with open(self._fp, 'r') as file:
+            next(file)  # skip the first row as it is the column name
+            for line in file:
+                row_data = line.strip().split(self._sep)
+                row_dict = {col_name: value for col_name, value in zip(self._col_names, row_data)}
+                yield row_dict
     ######################################## YOUR CODE HERE ##################################################
 
     def get_file_path(self):
