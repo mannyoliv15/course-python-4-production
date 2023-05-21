@@ -45,7 +45,21 @@ class DB:
         Read more about datatypes in Sqlite here -> https://www.sqlite.org/datatype3.html
         """
     ######################################## YOUR CODE HERE ##################################################
+        cursor = self._connection.cursor()
 
+        create_table_mth = f"""
+        CREATE TABLE IF NOT EXISTS {self._table_name} (
+                process_id TEXT NOT NULL,
+                file_name TEXT,
+                file_path TEXT,
+                description TEXT,
+                start_time TEXT NOT NULL,
+                end_time TEXT,
+                percentage REAL
+                )
+        """
+
+        cursor.execute(create_table_mth)
     ######################################## YOUR CODE HERE ##################################################
 
     def insert(self, process_id, start_time, file_name=None, file_path=None,
@@ -63,7 +77,13 @@ class DB:
         :return: None
         """
     ######################################## YOUR CODE HERE ##################################################
+        cursor = self._connection.cursor()
 
+        inserting_data = f'INSERT INTO {self._table_name} ({",".join(self._col_order)}) VALUES (?, ?, ?, ?, ?, ?, ?)'
+
+        cursor.execute(inserting_data, (process_id, file_name, file_path, description, start_time, end_time, percentage) )
+
+        self._connection.commit()
     ######################################## YOUR CODE HERE ##################################################
 
     def read_all(self) -> List[Dict]:
@@ -95,7 +115,13 @@ class DB:
         :return: None
         """
     ######################################## YOUR CODE HERE ##################################################
+        cursor = self._connection.cursor()
 
+        update_data = f"UPDATE {self._table_name} SET percentage = ? WHERE process_id = ?"
+
+        cursor.execute(update_data, (percentage, process_id))
+
+        self._connection.commit()
     ######################################## YOUR CODE HERE ##################################################
 
 
