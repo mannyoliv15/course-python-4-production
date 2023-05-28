@@ -164,7 +164,14 @@ def main() -> List[Dict]:
     batches = batch_files(file_paths=file_paths, n_processes=n_processes)
 
     ######################################## YOUR CODE HERE ##################################################
+    with multiprocessing.Pool(processes=n_processes) as pool:
+        # file_names: List[str], n_process: int
+        params = [(batch_of_files, n_process) for n_process, batch_of_files in enumerate(batches)]
+        revenue = pool.starmap(run, params)
+        revenue_data = flatten(revenue)
 
+        pool.close()
+        pool.join()
     ######################################## YOUR CODE HERE ##################################################
 
     en = time.time()
